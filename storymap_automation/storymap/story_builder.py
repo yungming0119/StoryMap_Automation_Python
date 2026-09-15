@@ -344,10 +344,18 @@ def render_story_map(
     try:
         _report(progress_callback, "Rendering StoryMap", 0, total)
         for completed, section in enumerate(story_spec, start=1):
-            if isinstance(story_spec[section], list):
-                story_map.add(story_spec[section][0], caption=story_spec[section][1])
-                if isinstance(story_spec[section][0], Map):
-                    map_content = story_spec[section][0]
+            content = story_spec[section]
+            if content is None:
+                _report(progress_callback, f"Skipped {section}", completed, total)
+                continue
+
+            if isinstance(content, list):
+                if not content or content[0] is None:
+                    raise ValueError(f"Story section '{section}' has no content")
+
+                story_map.add(content[0], caption=content[1])
+                if isinstance(content[0], Map):
+                    map_content = content[0]
                     extent = map_content.map.extent
                     map_content.set_viewpoint(
                         {
@@ -362,11 +370,11 @@ def render_story_map(
                     map_content.legend_pinned = True
 
                     
-                if isinstance(story_spec[section][0], Embed):
-                    story_spec[section][0].display = "inline"
-                    story_spec[section][0].caption = story_spec[section][1]
+                if isinstance(content[0], Embed):
+                    content[0].display = "inline"
+                    content[0].caption = content[1]
             else:
-                story_map.add(story_spec[section])
+                story_map.add(content)
             _report(progress_callback, f"Added {section}", completed, total)
 
         cover = story_map.contents[0]
