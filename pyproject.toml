@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "storymap-automation"
+version = "0.1.0"
+description = "Tools for retrieving Tennessee transportation data and building ArcGIS StoryMaps."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "arcgis>=2.2",
+    "beautifulsoup4>=4.12",
+    "pandas>=2.0",
+    "Pillow>=10.0",
+    "requests>=2.31",
+    "tqdm>=4.65",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+include = ["storymap_automation*"]
+
+[tool.setuptools.package-data]
+storymap_automation = ["population.csv"]
